@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Info</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+</head>
+<body>
+<h3 align="center">Doctor Page...</h3>
+
+
+<form class="form-horizontal" action="http://localhost:5000/healthcare/doctor/save/" method="post">
+     {% csrf_token %}
+<fieldset>
+
+
+{% if doc.id is 0 %}
+<!--Text input ID -->
+    <div hidden class="form-group">
+      <label  class="col-md-2 control-label" >ID</label>
+      <div class="col-md-2">
+      <input  name="d_id" class="form-control input-md"  value="{{doc.id}}" >
+       </div>
+    </div>
+{% else %}
+    <div  class="form-group">
+      <label  class="col-md-2 control-label"  >ID</label>
+      <div class="col-md-2">
+      <input readonly name="d_id" class="form-control input-md"  value="{{doc.id}}" >
+       </div>
+    </div>
+
+{% endif %}
+
+<!-- Text input Name-->
+<div class="form-group">
+  <label class="col-md-2 control-label"  >Name</label>
+  <div class="col-md-2">
+  <input   name="d_name" class="form-control input-md" value="{{doc.name}}">
+   </div>
+</div>
+
+
+    <!-- Text input speciality-->
+<div class="form-group">
+  <label class="col-md-2 control-label"  >Speciality</label>
+  <div class="col-md-2">
+  <input   name="d_speciality" class="form-control input-md" value="{{doc.speciality}}">
+   </div>
+</div>
+
+
+
+
+    <!-- Text input experience-->
+<div class="form-group">
+  <label class="col-md-2 control-label"  >No of Experience</label>
+  <div class="col-md-2">
+  <input   name="d_experience" class="form-control input-md" value="{{doc.experience}}">
+   </div>
+</div>
+
+
+    <!-- Text input salary-->
+<div class="form-group">
+  <label class="col-md-2 control-label"  >Salary</label>
+  <div class="col-md-2">
+  <input   name="d_salary" class="form-control input-md" value="{{doc.salary}}">
+   </div>
+</div>
+
+
+
+    <!-- Text input email-->
+<div class="form-group">
+  <label class="col-md-2 control-label"  >Email</label>
+  <div class="col-md-2">
+  <input   name="d_email" class="form-control input-md" value="{{doc.email}}">
+   </div>
+</div>
+
+
+ <!-- Text input blog-->
+<div class="form-group">
+  <label class="col-md-2 control-label"  >Blog ID</label>
+  <div class="col-md-2">
+  <input   name="d_blog" class="form-control input-md" value="{{doc.blog}}">
+   </div>
+</div>
+
+
+<!-- Select dropdown hospital -->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="selectbasic">Hospital</label>
+  <div class="col-md-2">
+
+    <select  name="hospital_id" class="form-control">
+        {% for hospital in hospital_list %}
+        <option value="{{hospital.id}}">{{hospital.id}}-{{hospital.name}}</option>
+        {% endfor %}
+    </select>
+  </div>
+</div>
+
+
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-2 control-label" > </label>
+  <div class="col-md-2">
+    <button  name="submit" class="btn btn-success"> Save </button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+
+{% if action %}
+    {% if action.items %}
+    <div class="alert alert-warning">
+      {% for key,value in action.items %}
+      <strong>{{key}}: {{value}} </strong><br>
+      {% endfor %}
+    </div>
+    {%else%}
+
+    <div class="alert alert-success">
+       <strong>{{action}} </strong><br>
+    </div>
+    {%endif%}
+{%endif%}
+<!-- table for address data -->
+ {% if doctor_list %}
+<div class="container">
+    <table class="table table-striped">
+              <thead class="thead-active">
+                  <tr class="bg-dark text-white" >
+                      <th>ID</th>
+                      <th>NAME</th>
+                      <th>SPECIALITY</th>
+                      <th>EXPERIENCE</th>
+                      <th>SALARY</th>
+                      <th>EMAIL</th>
+                      <th>BLOG</th>
+                      <th>HOSPITAL NAME</th>
+                      <th>ACTIONS</th>
+                  </tr>
+              </thead>
+              {% for doctor in doctor_list %}
+              <tbody>
+                  <tr>
+                        <td>{{doctor.id}}</td>
+                        <td>{{doctor.name}}</td>
+                        <td>{{doctor.speciality}}</td>
+                        <td>{{doctor.experience}}</td>
+                        <td>{{doctor.salary}}</td>
+                        <td>{{doctor.email}}</td>
+                        <td>{{doctor.blog}}</td>
+
+<!--                        <td>{{doctor.hospital}}</td>-->
+
+                      {% for hospital in hospital_list %}
+                        {% if doctor.hospital == hospital.id %}
+                        <td>{{hospital.name}}</td>
+                        {% endif %}
+                        {% endfor %}
+
+                        <td>
+                            <a href="http://localhost:5000/healthcare/doctor/edit/{{doctor.id}}">EDIT</a>
+                            <a href="http://localhost:5000/healthcare/doctor/delete/{{doctor.id}}">DELETE</a>
+                        </td>
+                  </tr>
+              </tbody>
+              {% endfor %}
+    </table>
+
+
+
+
+
+ </div>
+ </div>
+{% endif %}
+
+{%for i in doctor_list%}
+{{i}}<br>
+{%endfor%}
+</body>
+</html>

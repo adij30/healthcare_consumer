@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Address Info</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+</head>
+<body>
+
+
+<h3 align="center">Address Page...</h3>
+
+<form class="form-horizontal" action="http://localhost:5000/healthcare/address/save/" method="post">
+     {% csrf_token %}
+<fieldset>
+
+
+{% if adr.id is 0 %}
+<!--Text input ID -->
+    <div hidden class="form-group">
+      <label  class="col-md-2 control-label" for="textinput">ID</label>
+      <div class="col-md-2">
+      <input  name="a_id" class="form-control input-md"  value="{{adr.id}}" >
+       </div>
+    </div>
+{% else %}
+    <div  class="form-group">
+      <label  class="col-md-2 control-label" for="textinput">ID</label>
+      <div class="col-md-2">
+      <input readonly name="a_id" class="form-control input-md"  value="{{adr.id}}" >
+       </div>
+    </div>
+
+{% endif %}
+
+
+
+
+
+<!-- Text input City-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="">City</label>
+  <div class="col-md-2">
+  <input   name="a_city" class="form-control input-md" value="{{adr.city}}">
+   </div>
+</div>
+
+<!-- Text input State-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="textinput">State</label>
+  <div class="col-md-2">
+  <input   name="a_state"  class="form-control input-md" value="{{adr.state}}">
+   </div>
+</div>
+
+<!-- Text input Pin-Code-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="textinput">Pin-Code</label>
+  <div class="col-md-2">
+  <input   name="a_pincode" class="form-control input-md" value="{{adr.pin_code}}">
+   </div>
+</div>
+
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-2 control-label" > </label>
+  <div class="col-md-2">
+    <button  name="submit" class="btn btn-success"> Save </button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+{% if action%}
+    {% if action.items %}
+    <div class="alert alert-warning">
+      {% for key,value in action.items %}
+      <strong>{{key}}: {{value}} </strong><br>
+      {% endfor %}
+    </div>
+    {%else%}
+
+    <div class="alert alert-success">
+       <strong>{{action}} </strong><br>
+    </div>
+    {%endif%}
+{%endif%}
+
+
+
+
+
+
+
+<!-- table for address data -->
+ {% if address_list %}
+<div class="container">
+
+    <table class="table table-striped">
+              <thead class="thead-active">
+                  <tr class="bg-dark text-white" >
+                      <th>ID</th>
+                      <th>CITY</th>
+                      <th>STATE</th>
+                      <th>PIN-CODE</th>
+                      <th>ACTIONS</th>
+                  </tr>
+              </thead>
+              {% for address in address_list %}
+              <tbody>
+                  <tr>
+                        <td>{{address.id}}</td>
+                        <td>{{address.city}}</td>
+                        <td>{{address.state}}</td>
+                        <td>{{address.pin_code}}</td>
+                        <td>
+                            <a href="http://localhost:5000/healthcare/address/edit/{{address.id}}">EDIT</a>
+                            <a href="http://localhost:5000/healthcare/address/delete/{{address.id}}">DELETE</a>
+                        </td>
+                  </tr>
+              </tbody>
+              {% endfor %}
+    </table>
+
+
+ </div>
+ </div>
+{% endif %}
+
+</body>
+</html>

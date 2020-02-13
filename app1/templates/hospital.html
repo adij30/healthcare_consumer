@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Info</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+</head>
+<body>
+
+<h3 align="center">Hospital Page...</h3>
+
+<form class="form-horizontal" action="http://localhost:5000/healthcare/hospital/save/" method="post">
+     {% csrf_token %}
+<fieldset>
+
+
+{% if hsp.id is 0 %}
+<!--Text input ID -->
+    <div hidden class="form-group">
+      <label  class="col-md-2 control-label" for="textinput">ID</label>
+      <div class="col-md-2">
+      <input  name="h_id" class="form-control input-md"  value="{{hsp.id}}" >
+       </div>
+    </div>
+{% else %}
+    <div  class="form-group">
+      <label  class="col-md-2 control-label" for="textinput">ID</label>
+      <div class="col-md-2">
+      <input readonly name="h_id" class="form-control input-md"  value="{{hsp.id}}" >
+       </div>
+    </div>
+
+{% endif %}
+
+
+
+<!-- Text input Name-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="">Name</label>
+  <div class="col-md-2">
+  <input   name="h_name" class="form-control input-md" value="{{hsp.name}}">
+   </div>
+</div>
+
+<!-- Text input mobileno _no-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="textinput">Mobile No</label>
+  <div class="col-md-2">
+  <input   name="h_phone_no"  class="form-control input-md" value="{{hsp.phone_no}}">
+   </div>
+</div>
+
+
+ <!-- Select dropdown Address -->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="selectbasic">Address</label>
+  <div class="col-md-2">
+
+    <select  name="address_id" class="form-control">
+        {% for adr in address_list%}
+                {%if hsp.address == adr.id%}
+                <option value="{{adr.id}}" selected>{{adr.city}}</option>
+                {% else %}
+                <option value="{{adr.id}}">{{adr.city}}</option>
+                {% endif %}
+        {% endfor %}
+    </select>
+  </div>
+</div>
+
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-2 control-label" > </label>
+  <div class="col-md-2">
+    <button  name="submit" class="btn btn-success"> Save </button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+
+{% if action %}
+    {% if action.items %}
+    <div class="alert alert-warning">
+      {% for key,value in action.items %}
+      <strong>{{key}}: {{value}} </strong><br>
+      {% endfor %}
+    </div>
+    {%else%}
+
+    <div class="alert alert-success">
+       <strong>{{action}} </strong><br>
+    </div>
+    {%endif%}
+{%endif%}
+<!--for testing purpose, backref(related name)-->
+<!--{% for h in hospital_list %}-->
+<!--{% with a=h %}-->
+<!--{{a}}<br>-->
+<!--{% endwith %}-->
+<!--{% endfor  %}-->
+
+<!-- table for hospital data -->
+ {% if hospital_list %}
+ <div class="container">
+    <table class="table table-striped">
+              <thead class="thead-active">
+                  <tr class="bg-dark text-white" >
+                      <th>ID</th>
+                      <th>NAME</th>
+                      <th>MOBILE_NO</th>
+                      <th>ADDRESS</th>
+                      <th>ACTIONS</th>
+                  </tr>
+              </thead>
+              {% for hospital in hospital_list %}
+              <tbody>
+                  <tr>
+                        <td>{{hospital.id}}</td>
+                        <td>{{hospital.name}}</td>
+                        <td>{{hospital.phone_no}}</td>
+
+                        {% for adr in address_list %}
+                        {% if hospital.address == adr.id %}
+                        <td>{{adr.city}}</td>
+                        {% endif %}
+                        {% endfor %}
+
+
+                        <td>
+                            <a href="http://localhost:5000/healthcare/hospital/edit/{{hospital.id}}">EDIT</a>
+                            <a href="http://localhost:5000/healthcare/hospital/delete/{{hospital.id}}">DELETE</a>
+                        </td>
+                  </tr>
+              </tbody>
+              {% endfor %}
+    </table>
+
+
+
+
+
+ </div>
+ </div>
+{% endif %}
+
+</body>
+</html>

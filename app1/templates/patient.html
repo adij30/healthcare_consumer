@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Info</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <style>body {font-family: Arial, sans-serif;}</style>
+
+     <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+  <!-- Fengyuan Chen's Datepicker -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js" integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+
+
+
+</head>
+<body>
+<h3 align="center">Patient Page...</h3>
+
+
+<form class="form-horizontal" action="http://localhost:5000/healthcare/patient/save/" method="post">
+{% csrf_token %}
+<fieldset>
+
+
+{% if pat.id is 0 %}
+<!--Text input ID -->
+    <div hidden class="form-group">
+      <label  class="col-md-2 control-label" >ID</label>
+      <div class="col-md-2">
+      <input  name="p_id" class="form-control input-md"  value="{{pat.id}}" >
+       </div>
+    </div>
+{% else %}
+    <div  class="form-group">
+      <label  class="col-md-2 control-label"  >ID</label>
+      <div class="col-md-2">
+      <input readonly name="p_id" class="form-control input-md"  value="{{pat.id}}" >
+       </div>
+    </div>
+
+{% endif %}
+
+
+
+    <!-- Text input Patient Name-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="textinput">Patient Name</label>
+  <div class="col-md-2">
+  <input  name="p_name"  class="form-control input-md" required value="{{pat.name}}">
+
+  </div>
+</div>
+
+
+<!-- Text input Datepicker birthdate-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="textinput">BirthDate</label>
+  <div class="col-md-2">
+  <input id="datepicker" required name="p_dob" value="{{pat.birth_date}}">
+
+  <script>
+    $(function () {
+      $("#datepicker").datepicker();
+    });
+  </script>
+  </div>
+</div>
+
+
+<!-- Multiple Radios (inline) Gender-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="gender">Gender</label>
+  <div class="col-md-4">
+<!--      if welcome page-->
+      {% if not pat.gender  %}
+    <label class="radio-inline" >
+      <input type="radio" name="p_gender"  value="Male" >
+      Male
+    </label>
+    <label class="radio-inline" >
+      <input type="radio" name="p_gender"  value="Female" >
+      Female
+    </label>
+     {% endif %}
+
+<!--      if gender is male-->
+    {% if pat.gender == 'Male' %}
+    <label class="radio-inline" >
+      <input type="radio" name="p_gender"  value="{{pat.gender}}" checked="checked">
+      Male
+    </label>
+    <label class="radio-inline" >
+      <input type="radio" name="p_gender"  value="{{pat.gender}}" >
+      Female
+    </label>
+     {% endif %}
+<!--if gender is female-->
+     {% if pat.gender == 'Female' %}
+    <label class="radio-inline" >
+      <input type="radio" name="p_gender"  value="{{pat.gender}}" >
+      Male
+    </label>
+    <label class="radio-inline" >
+      <input type="radio" name="p_gender"  value="{{pat.gender}}"  checked="checked">
+      Female
+    </label>
+    {% endif %}
+
+  </div>
+</div>
+
+
+
+
+
+<!-- Text input Blood Group-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="">Blood Group</label>
+  <div class="col-md-2">
+  <input  name="p_bloog_group"  class="form-control input-md" required value="{{pat.blood_group}}">
+
+  </div>
+</div>
+
+<!-- Text input Diseases-->
+<div class="form-group">
+  <label class="col-md-2 control-label" for="">Diseases</label>
+  <div class="col-md-2">
+  <input  name="p_diseases"  class="form-control input-md" required value="{{pat.diseases}}">
+
+  </div>
+</div>
+
+
+<!-- Select Multiple for doctor -->
+<div class="form-group">
+  <label class="col-md-2 control-label" >Doctors</label>
+  <div class="col-md-2">
+    <select   name="doc_ids" class="form-control" multiple="multiple">
+        <option value="" selected="selected" hidden="hidden" multiple="multiple">Choose here</option>
+        {% for doc in doctor_list%}
+                {% if doc.id in pat.doctors %}
+      <option value="{{doc.id}}" selected="selected"  >{{doc.name}}</option>
+                {% else %}
+      <option value="{{doc.id}}">{{doc.name}}</option>
+                {% endif %}
+        {% endfor%}
+
+    </select>
+  </div>
+</div>
+
+
+<!-- Select dropdown for address -->
+<div class="form-group">
+  <label class="col-md-2 control-label" >Address</label>
+  <div class="col-md-2">
+    <select name="adr_id" class="form-control"><option value="" selected="selected" hidden="hidden">Choose here</option>
+
+        {% for adr in address_list%}
+            {% if pat.address == adr.id %}
+      <option value="{{adr.id}}" selected="selected"  >{{adr.city}}</option>
+            {% endif %}
+      <option value="{{adr.id}}">{{adr.city}}</option>
+         {% endfor%}
+
+
+
+
+
+    </select>
+  </div>
+</div>
+
+
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-2 control-label" > </label>
+  <div class="col-md-2">
+    <button  name="submit" class="btn btn-success"> Save </button>
+  </div>
+</div>
+
+
+
+</fieldset>
+</form>
+
+
+{% if action %}
+    {% if action.items %}
+    <div class="alert alert-warning">
+      {% for key,value in action.items %}
+      <strong>{{key}}: {{value}} </strong><br>
+      {% endfor %}
+    </div>
+    {%else%}
+
+    <div class="alert alert-success">
+       <strong>{{action}} </strong><br>
+    </div>
+    {%endif%}
+{%endif%}
+
+
+<!-- table for patient data -->
+ {% if patient_list %}
+ <div class="container">
+    <table class="table table-striped">
+              <thead class="thead-active">
+                  <tr class="bg-dark text-white" >
+                      <th>ACTIONS</th>
+                      <th>ID</th>
+                      <th>NAME</th>
+                      <th>Gender</th>
+<!--                      <th>DOB</th>-->
+                      <th>AGE</th>
+                      <th>BLOOD-GROUP</th>
+                      <th>DISEASES</th>
+                      <th>ADDRESS</th>
+                      <th>DOCTORS</th>
+
+
+                  </tr>
+              </thead>
+              {% for patient in patient_list %}
+              <tbody>
+                  <tr>
+                        <td>
+                            <a href="http://localhost:5000/healthcare/patient/edit/{{patient.id}}">EDIT - </a>
+                            <a href="http://localhost:5000/healthcare/patient/delete/{{patient.id}}">DELETE</a>
+                        </td>
+                        <td>{{patient.id}}</td>
+                        <td>{{patient.name}}</td>
+                        <td>{{patient.gender}}</td>
+<!--                        <td>{{patient.birth_date}}</td>-->
+                        <td>{{patient.age}}</td>
+                        <td>{{patient.blood_group}}</td>
+                        <td>{{patient.diseases}}</td>
+<!--                        <td>{{patient.address}}</td>-->
+
+                        {% for adr in address_list %}
+                        {% if patient.address == adr.id %}
+                        <td>{{adr.city}}</td>
+                        {% endif %}
+                        {% endfor %}
+
+<!--                        <td>{{patient.doctors}}</td>-->
+
+                        {% for doc in doctor_list %}
+                        {% if doc.id in patient.doctors %}
+                        <td>{{doc.id}}-{{doc.name}}</td>
+                        {% endif %}
+                        {% endfor %}
+
+
+
+
+
+                  </tr>
+              </tbody>
+              {% endfor %}
+    </table>
+
+
+ </div>
+ </div>
+{% endif %}
+
+
+</body>
+</html>
+
+{%for i in patient_list%}
+{{i}}<br>
+{%endfor%}
